@@ -28,6 +28,16 @@ export class CreateEmployeeComponent implements OnInit {
         proficiency: ["beginner"],
       }),
     });
+
+    // Subscribe to valueChanges observable
+    this.employeeForm.get("fullName").valueChanges.subscribe((value) => {
+      console.log(value);
+    });
+
+    // Subscribe to FormGroup valueChanges observable
+    // this.employeeForm.valueChanges.subscribe((value) => {
+    //   console.log(JSON.stringify(value));
+    // });
   }
 
   onLoadDataClick(): void {
