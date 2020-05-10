@@ -1,5 +1,13 @@
-<h1>Angular works</h1>
-
-<button class="btn btn-primary">
-  Bootstrap Styled Button
-</button>
+<div class="container">
+  <nav class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+      <li>
+        <a routerLinkActive="active" routerLink="list">List</a>
+      </li>
+      <li>
+        <a routerLinkActive="active" routerLink="create">Create</a>
+      </li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
+</div>
