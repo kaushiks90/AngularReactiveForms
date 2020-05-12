@@ -70,21 +70,25 @@ export class CreateEmployeeComponent implements OnInit {
     // });
   }
 
-  logKeyValuePairs(group: FormGroup): void {
+  logValidationErrors(group: FormGroup = this.employeeForm): void {
     // loop through each key in the FormGroup
     Object.keys(group.controls).forEach((key: string) => {
       // Get a reference to the control using the FormGroup.get() method
       const abstractControl = group.get(key);
       // If the control is an instance of FormGroup i.e a nested FormGroup
-      // then recursively call this same method (logKeyValuePairs) passing it
+      // then recursively call this same method (logValidationErrors) passing it
       // the FormGroup so we can get to the form controls in it
       if (abstractControl instanceof FormGroup) {
-        this.logKeyValuePairs(abstractControl);
+        this.logValidationErrors(abstractControl);
         // If the control is not a FormGroup then we know it's a FormControl
       } else {
         // Clear the existing validation errors
         this.formErrors[key] = "";
-        if (abstractControl && !abstractControl.valid) {
+        if (
+          abstractControl &&
+          !abstractControl.valid &&
+          (abstractControl.touched || abstractControl.dirty)
+        ) {
           // Get all the validation messages of the form control
           // that has failed the validation
           const messages = this.validationMessages[key];
@@ -123,7 +127,7 @@ export class CreateEmployeeComponent implements OnInit {
       // }
     });
 
-    this.logKeyValuePairs(this.employeeForm);
+    this.logValidationErrors(this.employeeForm);
     console.log(this.formErrors);
   }
 
