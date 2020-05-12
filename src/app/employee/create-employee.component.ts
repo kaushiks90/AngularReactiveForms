@@ -16,6 +16,7 @@ export class CreateEmployeeComponent implements OnInit {
   formErrors = {
     fullName: "",
     email: "",
+    phone: "",
     skillName: "",
     experienceInYears: "",
     proficiency: "",
@@ -30,6 +31,9 @@ export class CreateEmployeeComponent implements OnInit {
     },
     email: {
       required: "Email is required.",
+    },
+    phone: {
+      required: "Phone is required.",
     },
     skillName: {
       required: "Skill Name is required.",
@@ -51,7 +55,9 @@ export class CreateEmployeeComponent implements OnInit {
           Validators.maxLength(10),
         ],
       ],
+      contactPreference: ["email"],
       email: ["", Validators.required],
+      phone: [""],
       skills: this.fb.group({
         skillName: ["", Validators.required],
         experienceInYears: ["", Validators.required],
@@ -59,15 +65,11 @@ export class CreateEmployeeComponent implements OnInit {
       }),
     });
 
-    // Subscribe to valueChanges observable
-    // this.employeeForm.get("fullName").valueChanges.subscribe((value) => {
-    //   console.log(value);
-    // });
-
-    // Subscribe to FormGroup valueChanges observable
-    // this.employeeForm.valueChanges.subscribe((value) => {
-    //   console.log(JSON.stringify(value));
-    // });
+    this.employeeForm
+      .get("contactPreference")
+      .valueChanges.subscribe((data: string) => {
+        this.onContactPrefernceChange(data);
+      });
   }
 
   logValidationErrors(group: FormGroup = this.employeeForm): void {
@@ -106,6 +108,18 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
+  // If the Selected Radio Button value is "phone", then add the
+  // required validator function otherwise remove it
+  onContactPrefernceChange(selectedValue: string) {
+    const phoneFormControl = this.employeeForm.get("phone");
+    if (selectedValue === "phone") {
+      emailFormControl.clearValidators();
+      phoneFormControl.setValidators(Validators.required);
+    } else {
+      phoneFormControl.clearValidators();
+    }
+    phoneFormControl.updateValueAndValidity();
+  }
   onLoadDataClick(): void {
     // this.employeeForm.setValue({
     //   fullName: "Pragim Technologies",
