@@ -15,7 +15,9 @@ export class CreateEmployeeComponent implements OnInit {
   // corresponding form control
   formErrors = {
     fullName: "",
+    confirmEmail: "",
     email: "",
+    emailGroup: "",
     phone: "",
     skillName: "",
     experienceInYears: "",
@@ -32,6 +34,12 @@ export class CreateEmployeeComponent implements OnInit {
     email: {
       required: "Email is required.",
       emailDomain: "Email domian should be pragimtech.com",
+    },
+    confirmEmail: {
+      required: "Confirm Email is required.",
+    },
+    emailGroup: {
+      emailMismatch: "Email and Confirm Email do not match.",
     },
     phone: {
       required: "Phone is required.",
@@ -57,10 +65,16 @@ export class CreateEmployeeComponent implements OnInit {
         ],
       ],
       contactPreference: ["email"],
-      email: [
-        "",
-        [Validators.required, CustomValidators.emailDomain("dell.com")],
-      ],
+      emailGroup: this.fb.group(
+        {
+          email: [
+            "",
+            [Validators.required, CustomValidators.emailDomain("dell.com")],
+          ],
+          confirmEmail: ["", [Validators.required]],
+        },
+        { validator: this.matchEmails }
+      ),
       phone: [""],
       skills: this.fb.group({
         skillName: ["", Validators.required],
@@ -74,6 +88,10 @@ export class CreateEmployeeComponent implements OnInit {
       .valueChanges.subscribe((data: string) => {
         this.onContactPrefernceChange(data);
       });
+
+    this.employeeForm.valueChanges.subscribe((data) => {
+      this.logValidationErrors(this.employeeForm);
+    });
   }
 
   logValidationErrors(group: FormGroup = this.employeeForm): void {
@@ -81,33 +99,33 @@ export class CreateEmployeeComponent implements OnInit {
     Object.keys(group.controls).forEach((key: string) => {
       // Get a reference to the control using the FormGroup.get() method
       const abstractControl = group.get(key);
+      // Clear the existing validation errors
+      this.formErrors[key] = "";
+      if (
+        abstractControl &&
+        !abstractControl.valid &&
+        (abstractControl.touched || abstractControl.dirty)
+      ) {
+        // Get all the validation messages of the form control
+        // that has failed the validation
+        const messages = this.validationMessages[key];
+        // Find which validation has failed. For example required,
+        // minlength or maxlength. Store that error message in the
+        // formErrors object. The UI will bind to this object to
+        // display the validation errors
+        for (const errorKey in abstractControl.errors) {
+          if (errorKey) {
+            this.formErrors[key] += messages[errorKey] + " ";
+          }
+        }
+      }
+
       // If the control is an instance of FormGroup i.e a nested FormGroup
       // then recursively call this same method (logValidationErrors) passing it
       // the FormGroup so we can get to the form controls in it
       if (abstractControl instanceof FormGroup) {
         this.logValidationErrors(abstractControl);
         // If the control is not a FormGroup then we know it's a FormControl
-      } else {
-        // Clear the existing validation errors
-        this.formErrors[key] = "";
-        if (
-          abstractControl &&
-          !abstractControl.valid &&
-          (abstractControl.touched || abstractControl.dirty)
-        ) {
-          // Get all the validation messages of the form control
-          // that has failed the validation
-          const messages = this.validationMessages[key];
-          // Find which validation has failed. For example required,
-          // minlength or maxlength. Store that error message in the
-          // formErrors object. The UI will bind to this object to
-          // display the validation errors
-          for (const errorKey in abstractControl.errors) {
-            if (errorKey) {
-              this.formErrors[key] += messages[errorKey] + " ";
-            }
-          }
-        }
       }
     });
   }
@@ -136,6 +154,24 @@ export class CreateEmployeeComponent implements OnInit {
 
     this.logValidationErrors(this.employeeForm);
     console.log(this.formErrors);
+  }
+  // Nested form group (emailGroup) is passed as a parameter. Retrieve email and
+  // confirmEmail form controls. If the values are equal return null to indicate
+  // validation passed otherwise an object with emailMismatch key. Please note we
+  // used this same key in the validationMessages object against emailGroup
+  // property to store the corresponding validation error message
+  matchEmails(group: AbstractControl): { [key: string]: any } | null {
+    const emailControl = group.get("email");
+    const confirmEmailControl = group.get("confirmEmail");
+
+    if (
+      emailControl.value === confirmEmailControl.value ||
+      confirmEmailControl.pristine
+    ) {
+      return null;
+    } else {
+      return { emailMismatch: true };
+    }
   }
 
   onSubmit(): void {
