@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, AbstractControl } from "@angular/forms";
 import { FormBuilder, Validators } from "@angular/forms";
 
 @Component({
@@ -31,6 +31,7 @@ export class CreateEmployeeComponent implements OnInit {
     },
     email: {
       required: "Email is required.",
+      emailDomain: "Email domian should be pragimtech.com",
     },
     phone: {
       required: "Phone is required.",
@@ -56,7 +57,7 @@ export class CreateEmployeeComponent implements OnInit {
         ],
       ],
       contactPreference: ["email"],
-      email: ["", Validators.required],
+      email: ["", [Validators.required, this.emailDomain]],
       phone: [""],
       skills: this.fb.group({
         skillName: ["", Validators.required],
@@ -120,16 +121,6 @@ export class CreateEmployeeComponent implements OnInit {
     phoneFormControl.updateValueAndValidity();
   }
   onLoadDataClick(): void {
-    // this.employeeForm.setValue({
-    //   fullName: "Pragim Technologies",
-    //   email: "pragim@pragimtech.com",
-    //   skills: {
-    //     skillName: "C#",
-    //     experienceInYears: 5,
-    //     proficiency: "beginner",
-    //   },
-    // });
-
     this.employeeForm.patchValue({
       fullName: "Pragim Technologies",
       email: "pragim@pragimtech.com",
@@ -142,6 +133,16 @@ export class CreateEmployeeComponent implements OnInit {
 
     this.logValidationErrors(this.employeeForm);
     console.log(this.formErrors);
+  }
+
+  emailDomain(control: AbstractControl): { [key: string]: any } | null {
+    const email: string = control.value;
+    const domain = email.substring(email.lastIndexOf("@") + 1);
+    if (email === "" || domain.toLowerCase() === "pragimtech.com") {
+      return null;
+    } else {
+      return { emailDomain: true };
+    }
   }
 
   onSubmit(): void {
