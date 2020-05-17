@@ -113,9 +113,8 @@ export class CreateEmployeeComponent implements OnInit {
   onContactPrefernceChange(selectedValue: string) {
     const phoneFormControl = this.employeeForm.get("phone");
     if (selectedValue === "phone") {
-      emailFormControl.clearValidators();
       phoneFormControl.setValidators(Validators.required);
-    } else {
+    } else if (selectedValue === "email") {
       phoneFormControl.clearValidators();
     }
     phoneFormControl.updateValueAndValidity();
