@@ -57,7 +57,7 @@ export class CreateEmployeeComponent implements OnInit {
         ],
       ],
       contactPreference: ["email"],
-      email: ["", [Validators.required, this.emailDomain]],
+      email: ["", [Validators.required, this.emailDomain("dell.com")]],
       phone: [""],
       skills: this.fb.group({
         skillName: ["", Validators.required],
@@ -135,16 +135,17 @@ export class CreateEmployeeComponent implements OnInit {
     console.log(this.formErrors);
   }
 
-  emailDomain(control: AbstractControl): { [key: string]: any } | null {
-    const email: string = control.value;
-    const domain = email.substring(email.lastIndexOf("@") + 1);
-    if (email === "" || domain.toLowerCase() === "pragimtech.com") {
-      return null;
-    } else {
-      return { emailDomain: true };
-    }
+  emailDomain(domainName: string) {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const email: string = control.value;
+      const domain = email.substring(email.lastIndexOf("@") + 1);
+      if (email === "" || domain.toLowerCase() === "pragimtech.com") {
+        return null;
+      } else {
+        return { emailDomain: true };
+      }
+    };
   }
-
   onSubmit(): void {
     console.log(this.employeeForm.controls.fullName.value);
     console.log(this.employeeForm.get("fullName").value);
