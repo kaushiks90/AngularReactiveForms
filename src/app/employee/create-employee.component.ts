@@ -106,6 +106,9 @@ export class CreateEmployeeComponent implements OnInit {
   addSkillButtonClick(): void {
     (<FormArray>this.employeeForm.get("skills")).push(this.addSkillFormGroup());
   }
+  removeSkillButtonClick(skillGroupIndex: number): void {
+    (<FormArray>this.employeeForm.get("skills")).removeAt(skillGroupIndex);
+  }
 
   logValidationErrors(group: FormGroup = this.employeeForm): void {
     // loop through each key in the FormGroup
