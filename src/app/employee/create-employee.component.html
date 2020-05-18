@@ -74,7 +74,8 @@
             </button>
           </div>
         </div>
-        <div formArrayName="skills" *ngFor="let skill of employeeForm.get('skills').controls; let i = index">
+        <div formArrayName="skills" *ngFor="let skill of employeeForm.get('skills')['controls']
+        ; let i = index">
           <div [formGroupName]="i">
 
 
