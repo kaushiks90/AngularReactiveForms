@@ -89,9 +89,12 @@
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="{{'skillName'+i}}" placeholder="Name"
                   formControlName="skillName" (blur)="logValidationErrors()" placeholder="C#, Java, Angular etc...">
-                <span class="help-block" *ngIf="skill.get('skillName').errors?.required &&
+                <!-- <span class="help-block" *ngIf="skill.get('skillName').errors?.required &&
                   skill.get('skillName').touched">
                   Skill Name is required
+                </span> -->
+                <span class="help-block" *ngIf="formErrors.skillName">
+                  {{formErrors.skillName}}
                 </span>
               </div>
               <div class="col-sm-6" *ngIf="employeeForm.get('skills')['length']>1">
@@ -110,9 +113,12 @@
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="{{'experienceInYears'+i}}"
                   formControlName="experienceInYears" placeholder="In Years" (blur)="logValidationErrors()">
-                <span class="help-block" *ngIf="skill.get('experienceInYears').errors?.required &&
+                <!-- <span class="help-block" *ngIf="skill.get('experienceInYears').errors?.required &&
                   skill.get('experienceInYears').touched">
                   Experience is required
+                </span> -->
+                <span class="help-block" *ngIf="formErrors.experienceInYears">
+                  {{formErrors.experienceInYears}}
                 </span>
               </div>
             </div>
@@ -132,9 +138,13 @@
                   <input type="radio" value="advanced" formControlName="proficiency"
                     (blur)="logValidationErrors()">Advanced
                 </label>
-                <span class="help-block" *ngIf="skill.get('proficiency').errors?.required &&
+                <!-- <span class="help-block" *ngIf="skill.get('proficiency').errors?.required &&
                                     skill.get('proficiency').touched">
                   Proficiency is required
+                </span> -->
+
+                <span class="help-block" *ngIf="formErrors.proficiency">
+                  {{formErrors.proficiency}}
                 </span>
               </div>
             </div>
@@ -175,3 +185,6 @@
     </td>
   </tr>
 </table>
+
+
+<p>{{formErrors.skillName}}</p>

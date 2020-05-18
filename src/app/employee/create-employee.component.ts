@@ -24,9 +24,9 @@ export class CreateEmployeeComponent implements OnInit {
     email: "",
     emailGroup: "",
     phone: "",
-    // skillName: "",
-    // experienceInYears: "",
-    // proficiency: "",
+    skillName: "",
+    experienceInYears: "",
+    proficiency: "",
   };
 
   // This object contains all the validation messages for this form
@@ -49,15 +49,15 @@ export class CreateEmployeeComponent implements OnInit {
     phone: {
       required: "Phone is required.",
     },
-    // skillName: {
-    //   required: "Skill Name is required.",
-    // },
-    // experienceInYears: {
-    //   required: "Experience is required.",
-    // },
-    // proficiency: {
-    //   required: "Proficiency is required.",
-    // },
+    skillName: {
+      required: "Skill Name is required.",
+    },
+    experienceInYears: {
+      required: "Experience is required.",
+    },
+    proficiency: {
+      required: "Proficiency is required.",
+    },
   };
   ngOnInit() {
     this.employeeForm = this.fb.group({
@@ -140,10 +140,18 @@ export class CreateEmployeeComponent implements OnInit {
       // then recursively call this same method (logValidationErrors) passing it
       // the FormGroup so we can get to the form controls in it
 
-      // if (abstractControl instanceof FormGroup) {
-      //   this.logValidationErrors(abstractControl);
-      //   // If the control is not a FormGroup then we know it's a FormControl
-      // }
+      if (abstractControl instanceof FormGroup) {
+        this.logValidationErrors(abstractControl);
+        // If the control is not a FormGroup then we know it's a FormControl
+      }
+
+      if (abstractControl instanceof FormArray) {
+        for (const control of abstractControl.controls) {
+          if (control instanceof FormGroup) {
+            this.logValidationErrors(control);
+          }
+        }
+      }
     });
   }
 
