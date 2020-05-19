@@ -7,6 +7,10 @@ import {
 } from "@angular/forms";
 import { FormBuilder, Validators } from "@angular/forms";
 import { CustomValidators } from "../shared/custom.validators";
+import { ActivatedRoute } from "@angular/router";
+import { EmployeeService } from "./employee.service";
+import { IEmployee } from "./IEmployee";
+import { ISkill } from "./ISkill";
 @Component({
   selector: "app-create-employee",
   templateUrl: "./create-employee.component.html",
@@ -14,7 +18,11 @@ import { CustomValidators } from "../shared/custom.validators";
 })
 export class CreateEmployeeComponent implements OnInit {
   employeeForm: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private employeeService: EmployeeService
+  ) {}
   // This object will hold the messages to be displayed to the user
   // Notice, each key in this object has the same name as the
   // corresponding form control
@@ -93,6 +101,32 @@ export class CreateEmployeeComponent implements OnInit {
     this.employeeForm.valueChanges.subscribe((data) => {
       this.logValidationErrors(this.employeeForm);
     });
+
+    this.route.paramMap.subscribe((params) => {
+      const empId = +params.get("id");
+      if (empId) {
+        this.getEmployee(empId);
+      }
+    });
+  }
+
+  getEmployee(id: number) {
+    this.employeeService.getEmployee(id).subscribe(
+      (employee: IEmployee) => this.editEmployee(employee),
+      (err: any) => console.log(err)
+    );
+  }
+
+  editEmployee(employee: IEmployee) {
+    this.employeeForm.patchValue({
+      fullName: employee.fullName,
+      contactPreference: employee.contactPreference,
+      emailGroup: {
+        email: employee.email,
+        confirmEmail: employee.email,
+      },
+      phone: employee.phone,
+    });
   }
 
   addSkillFormGroup(): FormGroup {
@@ -120,7 +154,9 @@ export class CreateEmployeeComponent implements OnInit {
       if (
         abstractControl &&
         !abstractControl.valid &&
-        (abstractControl.touched || abstractControl.dirty)
+        (abstractControl.touched ||
+          abstractControl.dirty ||
+          abstractControl.value !== "")
       ) {
         // Get all the validation messages of the form control
         // that has failed the validation
@@ -191,7 +227,7 @@ export class CreateEmployeeComponent implements OnInit {
 
     if (
       emailControl.value === confirmEmailControl.value ||
-      confirmEmailControl.pristine
+      (confirmEmailControl.pristine && confirmEmailControl.value === "")
     ) {
       return null;
     } else {
