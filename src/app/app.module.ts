@@ -7,9 +7,11 @@ import { CreateEmployeeComponent } from "./employee/create-employee.component";
 import { ListEmployeesComponent } from "./employee/list-employees.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { EmployeeService } from "./employee/employee.service";
+import { HomeComponent } from './home.component';
+import { PageNotFoundComponent } from './page-not-found.component';
 
 @NgModule({
-  declarations: [AppComponent, CreateEmployeeComponent, ListEmployeesComponent],
+  declarations: [AppComponent, CreateEmployeeComponent, ListEmployeesComponent, HomeComponent, PageNotFoundComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
