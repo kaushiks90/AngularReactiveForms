@@ -42,6 +42,20 @@
           "proficiency": "advanced"
         }
       ]
+    },
+    {
+      "id": 3,
+      "fullName": "Pragim Te",
+      "contactPreference": "email",
+      "email": "kaushik@pragimtech.com",
+      "phone": "",
+      "skills": [
+        {
+          "skillName": "c",
+          "experienceInYears": "5",
+          "proficiency": "beginner"
+        }
+      ]
     }
   ]
 }
