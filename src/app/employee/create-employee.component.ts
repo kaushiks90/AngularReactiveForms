@@ -127,6 +127,26 @@ export class CreateEmployeeComponent implements OnInit {
       },
       phone: employee.phone,
     });
+    //Notice we are using setControl() method to replace the skills FormArray with the FormArray that setExistingSkills() method returns.
+    this.employeeForm.setControl(
+      "skills",
+      this.setExistingSkills(employee.skills)
+    );
+  }
+
+  setExistingSkills(skillSets: ISkill[]): FormArray {
+    const formArray = new FormArray([]);
+    skillSets.forEach((s) => {
+      formArray.push(
+        this.fb.group({
+          skillName: s.skillName,
+          experienceInYears: s.experienceInYears,
+          proficiency: s.proficiency,
+        })
+      );
+    });
+
+    return formArray;
   }
 
   addSkillFormGroup(): FormGroup {
@@ -140,8 +160,13 @@ export class CreateEmployeeComponent implements OnInit {
   addSkillButtonClick(): void {
     (<FormArray>this.employeeForm.get("skills")).push(this.addSkillFormGroup());
   }
+  //In our case, when a SKILL form group is removed from the FormArray we want to mark the formArray as touched and dirty.
+  //To achieve this, we are using markAsDirty() and markAsTouched() methods.
   removeSkillButtonClick(skillGroupIndex: number): void {
-    (<FormArray>this.employeeForm.get("skills")).removeAt(skillGroupIndex);
+    const skillsFormArray = <FormArray>this.employeeForm.get("skills");
+    skillsFormArray.removeAt(skillGroupIndex);
+    skillsFormArray.markAsDirty();
+    skillsFormArray.markAsTouched();
   }
 
   logValidationErrors(group: FormGroup = this.employeeForm): void {
