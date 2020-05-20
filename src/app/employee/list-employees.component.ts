@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { EmployeeService } from "./employee.service";
 import { IEmployee } from "./IEmployee";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-list-employees",
@@ -11,7 +11,10 @@ import { Router } from '@angular/router';
 export class ListEmployeesComponent implements OnInit {
   employees: IEmployee[];
 
-  constructor(private _employeeService: EmployeeService, private _router: Router) {}
+  constructor(
+    private _employeeService: EmployeeService,
+    private _router: Router
+  ) {}
 
   ngOnInit() {
     this._employeeService.getEmployees().subscribe(
@@ -20,9 +23,8 @@ export class ListEmployeesComponent implements OnInit {
     );
   }
   editButtonClick(employeeId: number) {
-    this._router.navigate(['/edit', employeeId]);
+    this._router.navigate(["/employees/edit", employeeId]);
   }
 }
-
 
 // json-server --watch db.json
