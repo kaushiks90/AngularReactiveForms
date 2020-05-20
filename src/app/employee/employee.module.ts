@@ -13,9 +13,10 @@ import { ReactiveFormsModule } from "@angular/forms";
 // Import and declare the components that belong to this Employee Module
 import { CreateEmployeeComponent } from "./create-employee.component";
 import { ListEmployeesComponent } from "./list-employees.component";
+import { EmployeeRoutingModule } from "./employee-routing.module";
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, EmployeeRoutingModule],
   declarations: [CreateEmployeeComponent, ListEmployeesComponent],
   // If you want the components that belong to this module, available to
   // other modules, that import this module, then include all those
