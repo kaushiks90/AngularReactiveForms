@@ -3,7 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home.component";
 import { PageNotFoundComponent } from "./page-not-found.component";
 import { PreloadAllModules } from "@angular/router";
-
+import { CustomPreloadingService } from "./custom-preloading.service";
 const routes: Routes = [
   // home route
   { path: "home", component: HomeComponent },
@@ -12,6 +12,7 @@ const routes: Routes = [
 
   {
     path: "employees",
+    data: { preload: true },
     loadChildren: "./employee/employee.module#EmployeeModule",
   },
   // wild card route
@@ -20,7 +21,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: CustomPreloadingService,
+    }),
   ],
   exports: [RouterModule],
 })
